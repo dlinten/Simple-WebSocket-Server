@@ -13,6 +13,9 @@
 #include <memory>
 
 #include <iostream>
+#include <iomanip>
+using namespace std;
+
 
 namespace SimpleWeb {
     template <class socket_type>
@@ -133,14 +136,27 @@ namespace SimpleWeb {
                 }
             }
             else
+            {
+                cout << "Length:" << length << endl;
                 response.put(length);
+            }
             
             response << stream.rdbuf();
+            
+            /*cout << "tx:";
+            
+            for( auto b : response.rdbuf()) {
+                cout << hex << setw(2) << setfill('0') << (int(b) & 0xff);
+            }
+            cout << endl;
+            */
             
             //Need to copy the callback-function in case its destroyed
             boost::asio::async_write(*connection->socket, *write_buffer, 
                     [this, connection, write_buffer, callback]
                     (const boost::system::error_code& ec, size_t bytes_transferred) {
+                        
+                        cout << "Sent Bytes:" << bytes_transferred << endl;
                 if(callback) {
                     callback(ec);
                 }
