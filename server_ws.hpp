@@ -137,7 +137,6 @@ namespace SimpleWeb {
             }
             else
             {
-                cout << "Length:" << length << endl;
                 response.put(length);
             }
             
