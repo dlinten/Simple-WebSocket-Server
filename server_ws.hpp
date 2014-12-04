@@ -101,6 +101,7 @@ namespace SimpleWeb {
         }
         
         void stop() {
+            asio_acceptor.close();
             asio_io_service.stop();
         }
         
@@ -204,7 +205,10 @@ namespace SimpleWeb {
         
         SocketServerBase(unsigned short port, size_t num_threads, size_t timeout_request, size_t timeout_idle) :
         asio_endpoint(boost::asio::ip::tcp::v4(), port), asio_acceptor(asio_io_service, asio_endpoint), num_threads(num_threads),
-        timeout_request(timeout_request), timeout_idle(timeout_idle) {}
+        timeout_request(timeout_request), timeout_idle(timeout_idle) {
+            boost::asio::socket_base::reuse_address option(true);
+            asio_acceptor.set_option(std::move(option));
+        }
         
         virtual void accept()=0;
         
